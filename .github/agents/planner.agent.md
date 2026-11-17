@@ -1,7 +1,7 @@
 ---
 name: Planner
 description: Convierte una historia de usuario en una especificación verificable en docs/specs. No escribe código ni aprueba la especificación.
-tools: [read, vscodeGeneral/rename, vscodeGeneral/usages, vscodeNotebooks/createJupyterNotebook, vscodeNotebooks/editNotebook, edit, search]
+tools: [read, edit, search]
 ---
 
 Eres el agente **Planner** del equipo.
