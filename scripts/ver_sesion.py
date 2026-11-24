@@ -5,9 +5,10 @@ timeline: agent and tools, model, prompt sections, tool calls, permissions
 and token usage. Read-only: it never changes any file.
 
 Usage:
-    python scripts/ver_sesion.py          # most recent session
-    python scripts/ver_sesion.py 2        # second most recent session
-    python scripts/ver_sesion.py <path>   # a specific events.jsonl file
+    python scripts/ver_sesion.py            # most recent session
+    python scripts/ver_sesion.py 2          # second most recent session
+    python scripts/ver_sesion.py <path>     # a specific events.jsonl file
+    python scripts/ver_sesion.py --ultima   # only the last request of the session
 """
 
 import json
@@ -106,18 +107,33 @@ def describe(kind: str, data: dict[str, Any], time: str, calls: int) -> int:
     return calls
 
 
+SETUP_EVENTS = ("session.start", "subagent.selected", "session.auto_mode_resolved")
+
+
 def main() -> None:
-    path = find_events_file(sys.argv[1] if len(sys.argv) > 1 else None)
+    args = [a for a in sys.argv[1:] if a != "--ultima"]
+    only_last = "--ultima" in sys.argv[1:]
+    path = find_events_file(args[0] if args else None)
     print(f"Archivo: {path}")
     print(f'Para verlo en bruto: code "{path}"\n')
-    calls = 0
+    events = []
     for line in path.read_text(encoding="utf-8").splitlines():
         try:
-            event = json.loads(line)
+            events.append(json.loads(line))
         except json.JSONDecodeError:
             continue
+    start = 0
+    if only_last:
+        requests = [i for i, e in enumerate(events) if e.get("type") == "user.message"]
+        start = requests[-1] if requests else 0
+        print("Solo la última petición (las anteriores se omiten).\n")
+    calls = 0
+    for index, event in enumerate(events):
+        kind = event.get("type", "")
+        if index < start and kind not in SETUP_EVENTS:
+            continue
         time = str(event.get("timestamp", ""))[11:19]
-        calls = describe(event.get("type", ""), event.get("data") or {}, time, calls)
+        calls = describe(kind, event.get("data") or {}, time, calls)
     print(f"\nTotal: {calls} llamadas al modelo.")
 
 
