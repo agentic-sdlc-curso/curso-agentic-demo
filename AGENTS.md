@@ -22,8 +22,9 @@
 - Ciclos de corrección: como máximo 3 intentos para que pasen los tests. Si no lo consigues, detente y explica el bloqueo.
 
 ## Verificación antes de terminar
-- Ejecuta `.\scripts\check.ps1` (ruff, formato, mypy y pytest) e indica el resultado, **incluido el número de tests ejecutados y cuántos son de la historia actual**.
-- Revisa `git status`: no deben aparecer `.venv/`, `__pycache__/`, cachés ni archivos generados.
+- Si has modificado código o tests y puedes ejecutar comandos: ejecuta `.\scripts\check.ps1` (ruff, formato, mypy y pytest) e indica el resultado, **incluido el número de tests ejecutados y cuántos son de la historia actual**.
+- Si no puedes ejecutar comandos, no inventes el resultado: indica que la verificación queda pendiente para la persona.
+- Si puedes ejecutar comandos, revisa `git status`: no deben aparecer `.venv/`, `__pycache__/`, cachés ni archivos generados.
 
 ## Archivos
 - Puedes modificar sin pedir confirmación `app/`, `tests/`, `docs/specs/`, `docs/pr/`, `docs/api.http` y `README.md`.
