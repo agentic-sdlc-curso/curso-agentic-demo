@@ -2,7 +2,7 @@
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, StringConstraints
+from pydantic import BaseModel, Field, StringConstraints
 
 RequestStatus = Literal["open", "in_progress", "closed"]
 
@@ -18,8 +18,12 @@ DescriptionText = Annotated[
 class ServiceRequestCreate(BaseModel):
     """Body of POST /requests. Extra fields are ignored."""
 
-    title: TitleText
-    description: DescriptionText
+    title: TitleText = Field(
+        description="Surrounding spaces are trimmed first; then 1 to 100 characters are allowed."
+    )
+    description: DescriptionText = Field(
+        description="Surrounding spaces are trimmed first; then 1 to 1000 characters are allowed."
+    )
 
 
 class ServiceRequest(BaseModel):
