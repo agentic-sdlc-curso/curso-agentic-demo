@@ -18,6 +18,21 @@ Si PowerShell no deja ejecutar `scripts\check.ps1`, usa: `powershell -ExecutionP
 
 En Linux o macOS, cambia `.venv\Scripts\python` por `.venv/bin/python`.
 
+## Uso de la API
+### `POST /requests` (H1 · crear una solicitud)
+Crea una solicitud. Los datos se guardan en memoria.
+
+```powershell
+curl -X POST http://localhost:8000/requests -H "Content-Type: application/json" `
+  -d '{"title": "Laptop request", "description": "I need a new laptop."}'
+```
+
+- **Cuerpo:** objeto JSON con `title` y `description`, ambos obligatorios y de tipo texto. Se recortan los espacios de los extremos y después se comprueba la longitud: `title` de 1 a 100 caracteres y `description` de 1 a 1000. Los campos extra se ignoran.
+- **Respuesta `201 Created`:** `id`, `title`, `description` (ya recortados), `status` (`"open"`) y `created_at` (fecha y hora ISO 8601 con zona horaria).
+- **Error `400 Bad Request`:** JSON malformado, campos ausentes, valores que no son texto, vacíos o fuera de los límites. Cuerpo: `{"error": "<mensaje>"}`.
+
+Más ejemplos en `docs/api.http`.
+
 ## Contenido
 | Ruta | Para qué sirve |
 |---|---|
