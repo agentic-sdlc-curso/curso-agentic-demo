@@ -9,4 +9,102 @@ GET {{base}}/health
 ### Ruta inexistente (404 en JSON)
 GET {{base}}/does-not-exist
 
-### Añade aquí las peticiones de cada historia (crear, listar, filtrar, errores…)
+### H1 · Crear solicitud (201)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "Laptop request",
+  "description": "I need a new laptop for the development team."
+}
+
+### H1 · Los espacios de los extremos se recortan (201, title "Access to CRM")
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "   Access to CRM   ",
+  "description": "   Read access for the sales team.   "
+}
+
+### H1 · Los campos extra se ignoran (201, sin "priority" en la respuesta)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "Laptop request",
+  "description": "I need a new laptop.",
+  "priority": "high"
+}
+
+### H1 · Error: falta title (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "description": "I need a new laptop."
+}
+
+### H1 · Error: title no es texto (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": 123,
+  "description": "I need a new laptop."
+}
+
+### H1 · Error: title solo con espacios (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "     ",
+  "description": "I need a new laptop."
+}
+
+### H1 · Error: title de 101 caracteres (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "description": "I need a new laptop."
+}
+
+### H1 · Error: falta description (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "Laptop request"
+}
+
+### H1 · Error: description no es texto (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "Laptop request",
+  "description": null
+}
+
+### H1 · Error: description vacía (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{
+  "title": "Laptop request",
+  "description": ""
+}
+
+### H1 · Error: JSON malformado (400)
+POST {{base}}/requests
+Content-Type: application/json
+
+{ "title": "Laptop request", "description": 
+
+### H1 · Error: description de más de 1000 caracteres (400)
+### Se prueba con los tests automáticos (límites de 1000 y 1001 caracteres); para probarla a mano, pega aquí una descripción de 1001 caracteres.
+
+### Añade aquí las peticiones de las siguientes historias (listar, filtrar, errores…)
