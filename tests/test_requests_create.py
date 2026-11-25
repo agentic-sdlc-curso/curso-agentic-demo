@@ -2,8 +2,8 @@
 
 from collections.abc import Iterator
 from datetime import datetime
-from typing import Any
 
+import httpx2
 import pytest
 from fastapi.testclient import TestClient
 
@@ -19,19 +19,19 @@ def _empty_repository() -> Iterator[None]:
     repository.clear()
 
 
-def _body(**overrides: Any) -> dict[str, Any]:
-    body: dict[str, Any] = {"title": "Laptop", "description": "I need a new laptop"}
+def _body(**overrides: object) -> dict[str, object]:
+    body: dict[str, object] = {"title": "Laptop", "description": "I need a new laptop"}
     body.update(overrides)
     return body
 
 
-def _without(field: str) -> dict[str, Any]:
+def _without(field: str) -> dict[str, object]:
     body = _body()
     del body[field]
     return body
 
 
-def _assert_error(res: Any) -> None:
+def _assert_error(res: httpx2.Response) -> None:
     assert res.status_code == 400
     assert res.headers["content-type"].startswith("application/json")
     error = res.json()["error"]
@@ -72,7 +72,7 @@ def test_c4_rejects_missing_title(client: TestClient) -> None:
 
 
 @pytest.mark.parametrize("title", [None, 123, True, ["a"], "", "   ", "\t\n"])
-def test_c4_rejects_invalid_title(client: TestClient, title: Any) -> None:
+def test_c4_rejects_invalid_title(client: TestClient, title: object) -> None:
     _assert_error(client.post(URL, json=_body(title=title)))
 
 
@@ -108,7 +108,7 @@ def test_c6_rejects_missing_description(client: TestClient) -> None:
 
 
 @pytest.mark.parametrize("description", [None, 123, True, ["a"], "", "   ", "\t\n"])
-def test_c6_rejects_invalid_description(client: TestClient, description: Any) -> None:
+def test_c6_rejects_invalid_description(client: TestClient, description: object) -> None:
     _assert_error(client.post(URL, json=_body(description=description)))
 
 
