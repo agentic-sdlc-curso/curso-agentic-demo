@@ -1,5 +1,5 @@
 """Application factory and entry point (uvicorn app.main:app)."""
-
+import os
 from fastapi import FastAPI
 
 from app.errors import ServiceRequestsAPI, register_error_handlers
